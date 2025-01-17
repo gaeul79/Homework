@@ -1,5 +1,6 @@
 package com.sparta.homework_login.dto.request;
 
+import com.sparta.homework_login.entity.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -28,4 +29,12 @@ public class SignUpRequestDto {
 
     @NotBlank
     private String userRole;
+
+    public User convertDtoToEntity(String password) {
+        return User.builder()
+                .username(username)
+                .password(password)
+                .nickname(nickname)
+                .build();
+    }
 }

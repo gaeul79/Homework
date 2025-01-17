@@ -1,6 +1,5 @@
 package com.sparta.homework_login.common;
 
-
 import com.sparta.homework_login.enums.ErrorCode;
 import com.sparta.homework_login.enums.UserRole;
 import com.sparta.homework_login.exception.BusinessException;
