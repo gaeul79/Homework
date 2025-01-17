@@ -14,6 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class PasswordConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // 비밀번호를 암호화해주는 hash 함수
+        return new BCryptPasswordEncoder();
     }
 }

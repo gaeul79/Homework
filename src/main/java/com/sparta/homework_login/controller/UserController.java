@@ -31,7 +31,7 @@ public class UserController {
      * @return 회원가입 처리 결과
      * @since 2025-01-17
      */
-    @PostMapping("/users")
+    @PostMapping("/auth/users")
     public ResponseEntity<SignUpResponseDto> signUp(
             @RequestBody @Valid SignUpRequestDto requestDto
     ) {
