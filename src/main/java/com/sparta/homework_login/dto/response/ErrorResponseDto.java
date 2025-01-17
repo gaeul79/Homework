@@ -2,15 +2,15 @@ package com.sparta.homework_login.dto.response;
 
 import com.sparta.homework_login.enums.ErrorCode;
 import com.sparta.homework_login.exception.BusinessException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
- * API응답 상태에 대한 정보를 제공하는 DTO 클래스
+ * 에러에 대한 정보를 제공하는 DTO 클래스
  *
- * @author 김현정
- * @since 2024-10-03
+ * @since 2025-01-17
  */
 @Data
 public class ErrorResponseDto {

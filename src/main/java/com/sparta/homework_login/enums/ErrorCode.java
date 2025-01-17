@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
  * API 응답 시 사용되는 상태 코드와 메시지를 정의하는 enum
  *
  * @see <a href="https://ko.wikipedia.org/wiki/HTTP_%EC%83%81%ED%83%9C_%EC%BD%94%EB%93%9C">HTTP 상태 코드</a>
- * @since 2024-10-03
+ * @since 2025-01-17
  */
 @Getter
 @AllArgsConstructor

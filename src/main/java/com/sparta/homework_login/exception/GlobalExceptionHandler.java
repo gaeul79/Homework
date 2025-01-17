@@ -4,17 +4,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sparta.homework_login.dto.response.ErrorResponseDto;
 import com.sparta.homework_login.enums.ErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * 예외 처리 클래스.
  *
- * @since 2024-10-21
+ * @since 2025-01-17
  */
 @Slf4j(topic = "exception:")
 @RestControllerAdvice
@@ -22,7 +23,7 @@ public class GlobalExceptionHandler {
     /**
      * 입력 관련 예외 처리
      *
-     * @since 2024-10-22
+     * @since 2025-01-17
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDto> BaseException(MethodArgumentNotValidException ex, HttpServletRequest req) {
@@ -38,7 +39,7 @@ public class GlobalExceptionHandler {
     /**
      * ResponseException 예외 처리
      *
-     * @since 2024-10-22
+     * @since 2025-01-17
      */
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponseDto> BaseException(BusinessException ex, HttpServletRequest req) {
@@ -48,7 +49,7 @@ public class GlobalExceptionHandler {
     /**
      * JSON 관련 예외 처리
      *
-     * @since 2024-10-31
+     * @since 2025-01-17
      */
     @ExceptionHandler(JsonProcessingException.class)
     public ResponseEntity<ErrorResponseDto> BaseException(JsonProcessingException ex, HttpServletRequest req) {
@@ -59,7 +60,7 @@ public class GlobalExceptionHandler {
     /**
      * 인코딩 관련 예외 처리
      *
-     * @since 2024-10-29
+     * @since 2025-01-17
      */
     @ExceptionHandler(UnsupportedEncodingException.class)
     public ResponseEntity<ErrorResponseDto> BaseException(UnsupportedEncodingException ex, HttpServletRequest req) {
@@ -70,7 +71,7 @@ public class GlobalExceptionHandler {
     /**
      * 그 외 기타 예외처리
      *
-     * @since 2024-10-22
+     * @since 2025-01-17
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> BaseException(Exception ex, HttpServletRequest req) {
@@ -84,7 +85,7 @@ public class GlobalExceptionHandler {
      * @param req HTTP 요청 객체
      * @param ex  발생한 예외 객체
      * @return HTTP 응답 객체
-     * @since 2024-10-24
+     * @since 2025-01-17
      */
     private ResponseEntity<ErrorResponseDto> baseException(HttpServletRequest req, BusinessException ex) {
         String url = req.getRequestURL().toString();
@@ -96,10 +97,10 @@ public class GlobalExceptionHandler {
     /**
      * 기본적인 예외 처리를 위한 메서드입니다.
      *
-     * @param req          HTTP 요청 객체
+     * @param req       HTTP 요청 객체
      * @param errorCode 응답 코드
      * @return ResponseEntity 객체
-     * @since 2024-10-24
+     * @since 2025-01-17
      */
     private ResponseEntity<ErrorResponseDto> baseException(HttpServletRequest req, ErrorCode errorCode) {
         String url = req.getRequestURL().toString();
@@ -114,7 +115,7 @@ public class GlobalExceptionHandler {
      * @param req      HTTP 요청 객체
      * @param errorMsg 에러 메시지
      * @return ResponseEntity 객체
-     * @since 2024-10-24
+     * @since 2025-01-17
      */
     private ResponseEntity<ErrorResponseDto> validException(HttpServletRequest req, String errorMsg) {
         String url = req.getRequestURL().toString();
@@ -127,7 +128,7 @@ public class GlobalExceptionHandler {
      * 예외 객체의 스택 트레이스를 배열로 가져옵니다.
      *
      * @param ex 발생한 예외 객체
-     * @since 2024-11-05
+     * @since 2025-01-17
      */
     public void printError(Exception ex) {
         StackTraceElement[] stackTraceElements = ex.getStackTrace();
