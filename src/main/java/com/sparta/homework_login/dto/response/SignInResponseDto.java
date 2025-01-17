@@ -1,6 +1,6 @@
 package com.sparta.homework_login.dto.response;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -10,7 +10,7 @@ import lombok.Getter;
  * @since 2025-01-17
  */
 @Getter
-@Builder
+@AllArgsConstructor
 public class SignInResponseDto {
 
     private final String bearerToken;
