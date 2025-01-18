@@ -53,8 +53,8 @@ dependencies {
 	implementation 'org.json:json:20231013'
 
     // Test
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
+	implementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.mockito:mockito-core' // Mockito for mocking
     testImplementation 'org.mockito:mockito-junit-jupiter' // Mockito with JUnit 5
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
