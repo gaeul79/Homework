@@ -11,6 +11,5 @@ import java.lang.annotation.RetentionPolicy;
 public @interface SecurityMockUser {
     String username() default "Hong Gil Dong";
     String password() default "1q2w3e4r#";
-    String nickname() default "동에 번쩍";
     UserRole userRole() default UserRole.ROLE_USER;
 }
