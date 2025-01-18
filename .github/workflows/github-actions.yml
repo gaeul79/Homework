@@ -129,7 +129,7 @@ jobs:
           username: ubuntu                 # SSH 사용자
           key: ${{ secrets.PRIVATE_KEY }}  # SSH 키
           script: |
-            echo "DOCKER_REPONAME=${{ secrets.DOCKER_REPONAME }}" > .env
+            echo "DOCKER_REPO=${{ secrets.DOCKER_REPO }}" > .env
             echo "DOCKER_IMAGE=${{ secrets.DOCKER_IMAGE }}" >> .env
             echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env
             echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env
