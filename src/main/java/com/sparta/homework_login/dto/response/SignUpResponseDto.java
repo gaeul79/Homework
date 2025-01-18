@@ -1,6 +1,7 @@
 package com.sparta.homework_login.dto.response;
 
 import com.sparta.homework_login.entity.User;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,8 +22,13 @@ import java.util.List;
 @NoArgsConstructor
 public class SignUpResponseDto {
 
+    @Schema(example = "Hong Gil Dong", description = "회원 이릅")
     private String userName;
+
+    @Schema(example = "동에 번쩍", description = "닉네임")
     private String nickname;
+
+    @Schema(example = "[\"ROLE_USER\"]", description = "권한")
     private List<AuthorDto> authorities;
 
     /**
