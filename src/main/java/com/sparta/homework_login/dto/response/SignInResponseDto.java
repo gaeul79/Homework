@@ -1,6 +1,7 @@
 package com.sparta.homework_login.dto.response;
 
-import lombok.Builder;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -10,8 +11,9 @@ import lombok.Getter;
  * @since 2025-01-17
  */
 @Getter
-@Builder
+@AllArgsConstructor
 public class SignInResponseDto {
 
+    @Schema(example = "Bearer ...", description = "발급된 토큰")
     private final String bearerToken;
 }
