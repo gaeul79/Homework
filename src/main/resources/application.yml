@@ -1,8 +1,0 @@
-spring:
-  application:
-    name: HOMEWORK_LOGIN
-  profiles:
-    include:
-      - swagger
-      - jwt
-      - dev

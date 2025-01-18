@@ -7,6 +7,11 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Swagger 설정 클래스
+ *
+ * @since 2025-01-18
+ */
 @Configuration
 @OpenAPIDefinition(
         info = @Info(title = "회원가입 API", version = "1.0", description = "Swagger를 활용한 회원가입 API 문서"),
