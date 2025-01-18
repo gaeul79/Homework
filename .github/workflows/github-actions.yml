@@ -147,3 +147,5 @@ jobs:
             sudo docker compose -f ./docker-compose.yml --env-file .env up -d # 컨테이너 재시작
             
             rm .env
+            
+            sudo docker system prune -a --volumes
