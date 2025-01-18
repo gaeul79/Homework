@@ -131,6 +131,7 @@ jobs:
           script: |
             echo "DOCKER_REPO=${{ secrets.DOCKER_REPO }}" > .env
             echo "DOCKER_IMAGE=${{ secrets.DOCKER_IMAGE }}" >> .env
+            
             echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> .env
             echo "DATABASE_HOST_PASSWORD=${{ secrets.DATABASE_HOST_PASSWORD }}" >> .env
             echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> .env
