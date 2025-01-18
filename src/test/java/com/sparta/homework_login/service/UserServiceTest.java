@@ -9,25 +9,27 @@ import com.sparta.homework_login.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doThrow;
 
-@ExtendWith(MockitoExtension.class) // @Mock 사용을 위해 설정합니다.
+@Rollback
+@Transactional
+@SpringBootTest
 public class UserServiceTest {
 
-    @Mock
+    @Autowired
     UserRepository userRepository;
 
-    @Mock
+    @Autowired
     PasswordEncoder passwordEncoder;
 
-    @Mock
+    @Autowired
     UserValidationCheck userValidationCheck;
 
     UserService userService;
@@ -67,17 +69,22 @@ public class UserServiceTest {
     @DisplayName("회원 가입 실패 - 중복된 이름")
     void signUp_failure_duplicateUsername() {
         // given
-        SignUpRequestDto requestDto = createSignUpRequestDto(
+        SignUpRequestDto requestDto1 = createSignUpRequestDto(
                 "Hong",
                 "1q2w3e4r#",
                 "동에 번쩍"
         );
-        doThrow(new BusinessException(ErrorCode.USER_DUPLICATED))
-                .when(userValidationCheck).duplicationUser(requestDto.getUsername());
+
+        SignUpRequestDto requestDto2 = createSignUpRequestDto(
+                "Hong",
+                "1q2w3e4r#",
+                "서에 번쩍"
+        );
 
         // when
+        userService.signUp(requestDto1);
         Exception exception = assertThrows(BusinessException.class, () -> {
-            userService.signUp(requestDto);
+            userService.signUp(requestDto2);
         });
 
         // then

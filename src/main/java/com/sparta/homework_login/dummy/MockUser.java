@@ -2,7 +2,7 @@ package com.sparta.homework_login.dummy;
 
 import com.sparta.homework_login.entity.User;
 
-public class UserDummy {
+public class MockUser {
 
     public static User createDummyUser() {
         String username = "Hong Gil Dong";
