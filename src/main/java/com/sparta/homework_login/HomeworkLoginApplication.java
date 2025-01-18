@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class HomeworkLoginApplication {
 
   public static void main(String[] args) {
+    // test
     SpringApplication.run(HomeworkLoginApplication.class, args);
   }
 
