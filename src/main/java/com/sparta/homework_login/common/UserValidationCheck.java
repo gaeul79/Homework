@@ -20,9 +20,4 @@ public class UserValidationCheck {
             throw new BusinessException(ErrorCode.USER_DUPLICATED);
         }
     }
-
-    public User findUser(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-    }
 }

@@ -5,6 +5,11 @@
 # YML_PROD: application-prod.yml 파일
 # YML_SWAGGER: application-swagger.yml 파일
 # YML_JWT: application-jwt.yml 파일
+# DATABASE_HOST: 루트사용자
+# DATABASE_HOST_PASSWORD: 루트 비밀번호
+# DATABASE_USERNAME: 사용자명
+# DATABASE_PASSWORD: 비밀번호
+# DATABASE_NAME: 데이터베이스 이름
 # DOCKER_USERNAME: 도커 로그인 아이디(이메일)
 # DOCKER_TOKEN: 비밀번호(토큰도 가능)
 # DOCKER_REPO: 레포지토리 이름
