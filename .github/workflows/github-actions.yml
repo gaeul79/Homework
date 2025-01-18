@@ -131,6 +131,9 @@ jobs:
           script: |
             echo "DOCKER_REPONAME=${{ secrets.DOCKER_REPONAME }}" > .env
             echo "DOCKER_IMAGE=${{ secrets.DOCKER_IMAGE }}" >> .env
+            echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env
+            echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env
+            echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> .env
             
             echo "${{ env.YML_DOCKER_COMPOSE }}"
             touch ./docker-compose.yml
