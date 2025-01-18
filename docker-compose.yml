@@ -24,8 +24,3 @@ services:
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
-      - --ssl-ca=/etc/mysql/certs/ca.crt
-      - --ssl-cert=/etc/mysql/certs/mysql.crt
-      - --ssl-key=/etc/mysql/certs/mysql.key
-      - --ssl=1
-      - --bind-address=0.0.0.0
