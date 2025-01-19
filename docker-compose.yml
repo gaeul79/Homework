@@ -21,6 +21,12 @@ services:
       MYSQL_PASSWORD: ${DATABASE_PASSWORD}
       MYSQL_DATABASE: ${DATABASE_NAME}
       TZ: Asia/Seoul
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+        reservations:
+          memory: 300M
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
