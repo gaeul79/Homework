@@ -164,4 +164,4 @@ jobs:
             sudo docker compose -f ./docker-compose.yml --env-file .env up -d app # 컨테이너 재시작
             
             rm .env
-            sudo docker system prune -a
+            yes | sudo docker system prune -a --volumes
