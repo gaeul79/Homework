@@ -147,10 +147,18 @@ jobs:
             touch ./docker-compose.yml
             echo "${{ env.YML_DOCKER_COMPOSE }}" | base64 --decode > ./docker-compose.yml
             cat ./docker-compose.yml
-            sudo docker compose -f ./docker-compose.yml --env-file .env down # 기존 컨테이너 종료
-            sudo docker compose -f ./docker-compose.yml --env-file .env pull # 최신 이미지 가져오기
+            sudo docker compose -f ./docker-compose.yml --env-file .env down # 기존 컨테이너 종료                        
+            
+            # MySQL 이미지가 있는지 확인 후 다운로드 여부 결정
+            if [ -z "$(sudo docker images -q mysql)" ]; then
+              echo "MySQL 이미지가 없습니다. 다운로드를 진행합니다."
+              sudo docker compose -f ./docker-compose.yml --env-file .env pull # 최신 이미지 가져오기
+            else
+              echo "MySQL 이미지가 이미 존재합니다. 다운로드를 건너뜁니다."
+              sudo docker compose -f ./docker-compose.yml --env-file .env pull $(sudo docker compose config --services | grep -v mysql) # MySQL을 제외한 서비스만 업데이트
+            fi
+
             sudo docker compose -f ./docker-compose.yml --env-file .env up -d # 컨테이너 재시작
             
             rm .env
-            
             sudo docker system prune -a --volumes
