@@ -26,6 +26,7 @@ services:
 
   app:
     image: ${DOCKER_REPO}/${DOCKER_IMAGE}:latest # Docker Hub 이미지
+    restart: always
     container_name: app
     ports:
       - "8080:8080"
