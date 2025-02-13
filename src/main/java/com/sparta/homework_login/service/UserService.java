@@ -1,6 +1,7 @@
 package com.sparta.homework_login.service;
 
 import com.sparta.homework_login.common.UserValidationCheck;
+import com.sparta.homework_login.dto.request.PasswordCheckRequestDto;
 import com.sparta.homework_login.dto.request.SignUpRequestDto;
 import com.sparta.homework_login.dto.response.SignUpResponseDto;
 import com.sparta.homework_login.entity.User;
@@ -47,5 +48,17 @@ public class UserService {
     private User createUser(SignUpRequestDto requestDto) {
         String password = passwordEncoder.encode(requestDto.getPassword());
         return requestDto.convertDtoToEntity(password);
+    }
+
+    /**
+     * 회원탈퇴 API
+     *
+     * @param id 로그인한 유저 ID
+     * @param requestDto 확인용 비밀번호 (JSON 형태)
+     * @since 2025-02-13
+     */
+    public void deleteUser(Long id, PasswordCheckRequestDto requestDto) {
+        userValidationCheck.comparePassword(id, requestDto.getPassword());
+        userRepository.deleteById(id);
     }
 }

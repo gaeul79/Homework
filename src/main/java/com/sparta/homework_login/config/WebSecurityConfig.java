@@ -1,5 +1,6 @@
 package com.sparta.homework_login.config;
 
+import com.sparta.homework_login.common.JsonUtil;
 import com.sparta.homework_login.common.JwtUtil;
 import com.sparta.homework_login.dto.security.UserDetailsServiceImpl;
 import com.sparta.homework_login.filter.JwtAuthenticationFilter;
@@ -33,6 +34,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class WebSecurityConfig {
     private final JwtUtil jwtUtil;
+    private final JsonUtil jsonUtil;
     private final UserDetailsServiceImpl userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationConfiguration authenticationConfiguration;
@@ -63,7 +65,7 @@ public class WebSecurityConfig {
      */
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, jsonUtil);
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
         return filter;
     }
@@ -77,7 +79,7 @@ public class WebSecurityConfig {
      */
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
+        return new JwtAuthorizationFilter(jsonUtil, jwtUtil, userDetailsService);
     }
 
     /**

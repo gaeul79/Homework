@@ -1,7 +1,10 @@
 package com.sparta.homework_login.filter;
 
+import com.sparta.homework_login.common.JsonUtil;
 import com.sparta.homework_login.common.JwtUtil;
 import com.sparta.homework_login.dto.security.UserDetailsServiceImpl;
+import com.sparta.homework_login.enums.ErrorCode;
+import com.sparta.homework_login.exception.BusinessException;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -28,10 +32,12 @@ import java.io.IOException;
  */
 @Slf4j(topic = "JwtAuthorizationFilter: JWT 검증 및 인가")
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
+    private final JsonUtil jsonUtil;
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
 
-    public JwtAuthorizationFilter(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService) {
+    public JwtAuthorizationFilter(JsonUtil jsonUtil, JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService) {
+        this.jsonUtil = jsonUtil;
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
     }
@@ -65,8 +71,17 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
             try {
                 setAuthentication(claims.get("username", String.class));
-            } catch (Exception e) {
-                log.error(e.getMessage());
+            } catch (BusinessException ex) {
+                jsonUtil.writeBody(req, res, ex.getErrorCode());
+                return;
+            }
+            catch (UsernameNotFoundException ex) {
+                jsonUtil.writeBody(req, res, ErrorCode.USER_NOT_FOUND);
+                return;
+            }
+            catch (Exception ex) {
+                log.error(ex.getMessage());
+                jsonUtil.writeBody(req, res, ErrorCode.UNKNOWN_ERROR);
                 return;
             }
         }
