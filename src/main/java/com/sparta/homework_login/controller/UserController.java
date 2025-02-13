@@ -1,8 +1,10 @@
 package com.sparta.homework_login.controller;
 
+import com.sparta.homework_login.dto.request.PasswordCheckRequestDto;
 import com.sparta.homework_login.dto.request.SignUpRequestDto;
 import com.sparta.homework_login.dto.response.ErrorResponseDto;
 import com.sparta.homework_login.dto.response.SignUpResponseDto;
+import com.sparta.homework_login.dto.security.UserDetailsImpl;
 import com.sparta.homework_login.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,10 +16,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 회원 관리 컨트롤러 클래스입니다.
@@ -69,5 +69,45 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(userService.signUp(requestDto));
+    }
+
+    /**
+     * 회원탈퇴 API
+     *
+     * @param userDetail 로그인한 유저 정보
+     * @param requestDto 확인용 비밀번호 (JSON 형태)
+     * @since 2025-02-13
+     */
+    @Operation(summary = "회원탈퇴", description = "비밀번호를 입력받아 탈퇴합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "회원탈퇴 성공"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "유저가 존재하지 않음",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "확인용 비밀번호가 일치하지 않음",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    })
+    @DeleteMapping("/users")
+    public ResponseEntity<Void> deleteUser(
+            @AuthenticationPrincipal UserDetailsImpl userDetail,
+            @RequestBody @Valid PasswordCheckRequestDto requestDto
+    ) {
+        userService.deleteUser(userDetail.getId(), requestDto);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT).build();
     }
 }
