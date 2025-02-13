@@ -67,7 +67,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("회원 가입 성공")
-    void signUp_Success() {
+    void signUp_success() {
         // given
         SignUpRequestDto requestDto = createSignUpRequestDto(
                 "Hong",
@@ -140,7 +140,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("회원 수정 실패 - 확인용 비밀번호 불일치")
-    void updateUser_failure_not_match_password() {
+    void updateUser_failure_notMatchPassword() {
         // given
         SignUpRequestDto createDto = createSignUpRequestDto(
                 "Hong",
@@ -199,7 +199,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("회원 탈퇴 실패 - 확인용 비밀번호 불일치")
-    void deleteUser_failure_not_match_password() {
+    void deleteUser_failure_notMatchPassword() {
         // given
         SignUpRequestDto createDto = createSignUpRequestDto(
                 "Hong",

@@ -39,7 +39,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("회원가입 성공")
-    public void signUp_Success() throws Exception {
+    public void signUp_success() throws Exception {
         // given
         SignUpRequestDto requestDto = createSignUpRequestDto(
                 "Hong",
