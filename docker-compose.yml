@@ -1,13 +1,5 @@
 version: "3.8"
 services:
-  app:
-    image: ${DOCKER_REPO}/${DOCKER_IMAGE}:latest # Docker Hub 이미지
-    container_name: app
-    ports:
-      - "8080:8080"
-    depends_on:
-      - mysql
-
   mysql:
     image: mysql:8.0
     restart: always
@@ -31,3 +23,12 @@ services:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
       - --bind-address=0.0.0.0
+
+  app:
+    image: ${DOCKER_REPO}/${DOCKER_IMAGE}:latest # Docker Hub 이미지
+    restart: always
+    container_name: app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
