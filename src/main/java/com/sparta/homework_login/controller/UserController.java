@@ -110,7 +110,7 @@ public class UserController {
             @RequestBody @Valid UpdateUserRequestDto requestDto) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(userService.updateUser(userDetail.getId(), requestDto));
+                .body(userService.updateUser(userDetail.getUsername(), requestDto));
     }
 
     /**
@@ -148,7 +148,7 @@ public class UserController {
             @AuthenticationPrincipal UserDetailsImpl userDetail,
             @RequestBody @Valid PasswordCheckRequestDto requestDto
     ) {
-        userService.deleteUser(userDetail.getId(), requestDto);
+        userService.deleteUser(userDetail, requestDto);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT).build();
     }
