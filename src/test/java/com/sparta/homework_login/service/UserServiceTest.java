@@ -1,8 +1,12 @@
 package com.sparta.homework_login.service;
 
 import com.sparta.homework_login.common.UserValidationCheck;
+import com.sparta.homework_login.dto.request.PasswordCheckRequestDto;
 import com.sparta.homework_login.dto.request.SignUpRequestDto;
+import com.sparta.homework_login.dto.request.UpdateUserRequestDto;
 import com.sparta.homework_login.dto.response.SignUpResponseDto;
+import com.sparta.homework_login.dto.response.UpdateUserResponseDto;
+import com.sparta.homework_login.entity.User;
 import com.sparta.homework_login.enums.ErrorCode;
 import com.sparta.homework_login.exception.BusinessException;
 import com.sparta.homework_login.repository.UserRepository;
@@ -40,6 +44,20 @@ public class UserServiceTest {
                 .password(password)
                 .nickname(nickname)
                 .build();
+    }
+
+    private UpdateUserRequestDto createUpdateUserRequestDto(String oriPassword, String newPassword, String nickname) {
+        return UpdateUserRequestDto.builder()
+                .nickname(nickname)
+                .oriPassword(oriPassword)
+                .newPassword(newPassword)
+                .build();
+    }
+
+    private User findUser(String username) {
+        return userRepository.findByUsername(username).orElseThrow(
+                () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
+        );
     }
 
     @BeforeEach
@@ -90,6 +108,119 @@ public class UserServiceTest {
         // then
         assertEquals(
                 ErrorCode.USER_DUPLICATED.getMessage(),
+                exception.getMessage()
+        );
+    }
+
+    @Test
+    @DisplayName("회원 수정 성공")
+    void updateUser_success() {
+        // given
+        SignUpRequestDto createDto = createSignUpRequestDto(
+                "Hong",
+                "1q2w3e4r#",
+                "동에 번쩍"
+        );
+
+        UpdateUserRequestDto updateDto = createUpdateUserRequestDto(
+                createDto.getPassword(),
+                "Admin123!",
+                "서에 번쩍"
+        );
+
+        // when
+        userService.signUp(createDto);
+        User user = findUser(createDto.getUsername());
+        UpdateUserResponseDto responseDto = userService.updateUser(user.getId(), updateDto);
+
+        // then
+        assertEquals(responseDto.getUserName(), createDto.getUsername());
+        assertEquals(responseDto.getNickname(), updateDto.getNickname());
+    }
+
+    @Test
+    @DisplayName("회원 수정 실패 - 확인용 비밀번호 불일치")
+    void updateUser_failure_not_match_password() {
+        // given
+        SignUpRequestDto createDto = createSignUpRequestDto(
+                "Hong",
+                "1q2w3e4r#",
+                "동에 번쩍"
+        );
+
+        UpdateUserRequestDto updateDto = createUpdateUserRequestDto(
+                "asdf1234!",
+                "Admin123!",
+                "서에 번쩍"
+        );
+
+        // when
+        userService.signUp(createDto);
+        User user = findUser(createDto.getUsername());
+        Exception exception = assertThrows(BusinessException.class, () -> {
+            userService.updateUser(user.getId(), updateDto);
+        });
+
+        // then
+        assertEquals(
+                ErrorCode.USER_PASSWORD_NOT_MATCH.getMessage(),
+                exception.getMessage()
+        );
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴 성공")
+    void deleteUser_success() {
+        // given
+        SignUpRequestDto createDto = createSignUpRequestDto(
+                "Hong",
+                "1q2w3e4r#",
+                "동에 번쩍"
+        );
+
+        PasswordCheckRequestDto deleteDto = new PasswordCheckRequestDto(
+                "1q2w3e4r#"
+        );
+
+        // when
+        userService.signUp(createDto);
+        User user = findUser(createDto.getUsername());
+        userService.deleteUser(user.getId(), deleteDto);
+        Exception exception = assertThrows(BusinessException.class, () -> {
+            findUser(createDto.getUsername());
+        });
+
+        // then
+        assertEquals(
+                ErrorCode.USER_NOT_FOUND.getMessage(),
+                exception.getMessage()
+        );
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴 실패 - 확인용 비밀번호 불일치")
+    void deleteUser_failure_not_match_password() {
+        // given
+        SignUpRequestDto createDto = createSignUpRequestDto(
+                "Hong",
+                "1q2w3e4r#",
+                "동에 번쩍"
+        );
+
+        PasswordCheckRequestDto deleteDto = new PasswordCheckRequestDto(
+                "asdf1234@"
+        );
+
+        // when
+        userService.signUp(createDto);
+        User user = findUser(createDto.getUsername());
+        Exception exception = assertThrows(BusinessException.class, () -> {
+            userService.deleteUser(user.getId(), deleteDto);
+        });
+
+        // then
+        assertEquals(
+                ErrorCode.USER_PASSWORD_NOT_MATCH.getMessage(),
                 exception.getMessage()
         );
     }
