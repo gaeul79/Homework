@@ -9,12 +9,16 @@ import com.sparta.homework_login.dto.response.UpdateUserResponseDto;
 import com.sparta.homework_login.entity.User;
 import com.sparta.homework_login.enums.ErrorCode;
 import com.sparta.homework_login.exception.BusinessException;
+import com.sparta.homework_login.mock.WithCustomMockUser;
 import com.sparta.homework_login.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Rollback
 @Transactional
+@AutoConfigureMockMvc
 @SpringBootTest
 public class UserServiceTest {
 
@@ -131,7 +136,7 @@ public class UserServiceTest {
         // when
         userService.signUp(createDto);
         User user = findUser(createDto.getUsername());
-        UpdateUserResponseDto responseDto = userService.updateUser(user.getId(), updateDto);
+        UpdateUserResponseDto responseDto = userService.updateUser(user.getUsername(), updateDto);
 
         // then
         assertEquals(responseDto.getUserName(), createDto.getUsername());
@@ -158,7 +163,7 @@ public class UserServiceTest {
         userService.signUp(createDto);
         User user = findUser(createDto.getUsername());
         Exception exception = assertThrows(BusinessException.class, () -> {
-            userService.updateUser(user.getId(), updateDto);
+            userService.updateUser(user.getUsername(), updateDto);
         });
 
         // then
@@ -169,6 +174,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @WithCustomMockUser
     @DisplayName("회원 탈퇴 성공")
     void deleteUser_success() {
         // given
@@ -184,8 +190,12 @@ public class UserServiceTest {
 
         // when
         userService.signUp(createDto);
-        User user = findUser(createDto.getUsername());
-        userService.deleteUser(user.getId(), deleteDto);
+        UserDetails userDetails = (UserDetails) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        userService.deleteUser(userDetails, deleteDto);
         Exception exception = assertThrows(BusinessException.class, () -> {
             findUser(createDto.getUsername());
         });
@@ -198,6 +208,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @WithCustomMockUser
     @DisplayName("회원 탈퇴 실패 - 확인용 비밀번호 불일치")
     void deleteUser_failure_notMatchPassword() {
         // given
@@ -213,9 +224,12 @@ public class UserServiceTest {
 
         // when
         userService.signUp(createDto);
-        User user = findUser(createDto.getUsername());
+        UserDetails userDetails = (UserDetails) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
         Exception exception = assertThrows(BusinessException.class, () -> {
-            userService.deleteUser(user.getId(), deleteDto);
+            userService.deleteUser(userDetails, deleteDto);
         });
 
         // then

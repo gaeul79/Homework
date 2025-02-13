@@ -16,8 +16,8 @@ public class UserValidationCheck {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
-    public User findUser(Long id) {
-        return userRepository.findById(id).orElseThrow(
+    public User findUser(String username) {
+        return userRepository.findByUsername(username).orElseThrow(
                 () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
         );
     }
@@ -29,8 +29,8 @@ public class UserValidationCheck {
         }
     }
 
-    public void comparePassword(Long id, String password) {
-        User user = findUser(id);
+    public void comparePassword(String username, String password) {
+        User user = findUser(username);
         if(!passwordEncoder.matches(password, user.getPassword())) {
             throw new BusinessException(ErrorCode.USER_PASSWORD_NOT_MATCH);
         }

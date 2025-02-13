@@ -1,11 +1,16 @@
 package com.sparta.homework_login.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.homework_login.dto.request.PasswordCheckRequestDto;
 import com.sparta.homework_login.dto.request.SignInRequestDto;
 import com.sparta.homework_login.dto.request.SignUpRequestDto;
+import com.sparta.homework_login.dto.request.UpdateUserRequestDto;
 import com.sparta.homework_login.entity.User;
+import com.sparta.homework_login.mock.WithCustomMockUser;
 import com.sparta.homework_login.repository.UserRepository;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,10 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -127,7 +131,6 @@ public class UserControllerTest {
     }
 
     @Test
-    @AutoConfigureMockMvc
     @DisplayName("로그인 성공")
     public void signIn_success() throws Exception {
         // given
@@ -145,11 +148,10 @@ public class UserControllerTest {
 
         // then
         actions.andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(status().isOk());
     }
 
     @Test
-    @AutoConfigureMockMvc
     @DisplayName("로그인 실패 - 존재하지 않는 유저")
     public void signIn_failure_notMatchUsername() throws Exception {
         // given
@@ -167,11 +169,10 @@ public class UserControllerTest {
 
         // then
         actions.andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    @AutoConfigureMockMvc
     @DisplayName("로그인 실패 - 비밀번호 불일치")
     public void signIn_failure_notMatchPassword() throws Exception {
         // given
@@ -189,6 +190,160 @@ public class UserControllerTest {
 
         // then
         actions.andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithCustomMockUser
+    @DisplayName("회원 정보 수정 성공")
+    public void updateUser_success() throws Exception {
+        // given
+        createUser();
+        UpdateUserRequestDto requestDto = new UpdateUserRequestDto(
+                "1q2w3e4r#",
+                "Admin123!",
+                "서에 번쩍"
+        );
+
+        // when
+        ResultActions actions = mockMvc.perform(put("/api/users")
+                .content(objectMapper.writeValueAsString(requestDto))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        actions.andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithCustomMockUser
+    @DisplayName("회원 정보 수정 실패 - 비밀번호 불일치")
+    public void updateUser_failure_notMatchPassword() throws Exception {
+        // given
+        createUser();
+        UpdateUserRequestDto requestDto = new UpdateUserRequestDto(
+                "12345678",
+                "Admin123!",
+                "서에 번쩍"
+        );
+
+        // when
+        ResultActions actions = mockMvc.perform(put("/api/users")
+                .content(objectMapper.writeValueAsString(requestDto))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        actions.andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithCustomMockUser
+    @DisplayName("회원 정보 수정 실패 - 닉네임 미입력")
+    public void updateUser_failure_blankNickname() throws Exception {
+        // given
+        createUser();
+        UpdateUserRequestDto requestDto = new UpdateUserRequestDto(
+                "1q2w3e4r#",
+                "Admin123!",
+                null
+        );
+
+        // when
+        ResultActions actions = mockMvc.perform(put("/api/users")
+                .content(objectMapper.writeValueAsString(requestDto))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        actions.andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithCustomMockUser
+    @DisplayName("회원 정보 수정 실패 - 잘못된 형식의 비밀번호")
+    public void updateUser_failure_badPassword() throws Exception {
+        // given
+        createUser();
+        UpdateUserRequestDto requestDto = new UpdateUserRequestDto(
+                "1q2w3e4r#",
+                "12345678",
+                "서에 번쩍"
+        );
+
+        // when
+        ResultActions actions = mockMvc.perform(put("/api/users")
+                .content(objectMapper.writeValueAsString(requestDto))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        actions.andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithCustomMockUser
+    @DisplayName("회원 탈퇴 성공")
+    public void deleteUser_success() throws Exception {
+        // given
+        createUser();
+        PasswordCheckRequestDto requestDto = new PasswordCheckRequestDto(
+                "1q2w3e4r#"
+        );
+
+        // when
+        ResultActions actions = mockMvc.perform(delete("/api/users")
+                .content(objectMapper.writeValueAsString(requestDto))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        actions.andDo(print())
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @WithCustomMockUser
+    @DisplayName("회원 탈퇴 실패 - 이미 탈퇴한 유저")
+    public void deleteUser_failure_notFound() throws Exception {
+        // given
+        PasswordCheckRequestDto requestDto = new PasswordCheckRequestDto(
+                "1q2w3e4r#"
+        );
+
+        // when
+        ResultActions actions = mockMvc.perform(delete("/api/users")
+                .content(objectMapper.writeValueAsString(requestDto))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        actions.andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithCustomMockUser
+    @DisplayName("회원 탈퇴 실패 - 비밀번호 불일치")
+    public void deleteUser_failure_notMatchPassword() throws Exception {
+        // given
+        createUser();
+        PasswordCheckRequestDto requestDto = new PasswordCheckRequestDto(
+                "12345678"
+        );
+
+        // when
+        ResultActions actions = mockMvc.perform(delete("/api/users")
+                .content(objectMapper.writeValueAsString(requestDto))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        actions.andDo(print())
+                .andExpect(status().isUnauthorized());
     }
 }

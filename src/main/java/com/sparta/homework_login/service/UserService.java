@@ -10,6 +10,7 @@ import com.sparta.homework_login.entity.User;
 import com.sparta.homework_login.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,15 +57,15 @@ public class UserService {
     /**
      * 회원수정 API
      *
-     * @param id 로그인한 유저 ID
+     * @param username 로그인한 유저이름
      * @param requestDto 수정할 유저 정보
      * @since 2025-02-13
      */
     @Transactional
-    public UpdateUserResponseDto updateUser(Long id, UpdateUserRequestDto requestDto) {
-        userValidationCheck.comparePassword(id, requestDto.getOriPassword());
+    public UpdateUserResponseDto updateUser(String username, UpdateUserRequestDto requestDto) {
+        userValidationCheck.comparePassword(username, requestDto.getOriPassword());
         String newPassword = passwordEncoder.encode(requestDto.getNewPassword());
-        User user = userValidationCheck.findUser(id);
+        User user = userValidationCheck.findUser(username);
         user.update(requestDto.getNickname(), newPassword);
         return UpdateUserResponseDto.create(user);
     }
@@ -72,12 +73,13 @@ public class UserService {
     /**
      * 회원탈퇴 API
      *
-     * @param id 로그인한 유저 ID
+     * @param userDetail 로그인한 유저 이름
      * @param requestDto 확인용 비밀번호 (JSON 형태)
      * @since 2025-02-13
      */
-    public void deleteUser(Long id, PasswordCheckRequestDto requestDto) {
-        userValidationCheck.comparePassword(id, requestDto.getPassword());
-        userRepository.deleteById(id);
+    public void deleteUser(UserDetails userDetail, PasswordCheckRequestDto requestDto) {
+        userValidationCheck.comparePassword(userDetail.getUsername(), requestDto.getPassword());
+        User user = userValidationCheck.findUser(userDetail.getUsername());
+        userRepository.delete(user);
     }
 }
