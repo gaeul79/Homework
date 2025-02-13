@@ -34,6 +34,7 @@
 'homework_login'                                        # 주요 패키지
 ├── 'common'                                            # 공통 유틸리티 클래스
 │   ├── JwtUtil.java                                    # JWT 토큰 생성 및 검증
+│   ├── JsonUtil.java                                   # Json처리 관련 유틸 클래스
 │   └── UserValidationCheck.java                        # 사용자 유효성 검사
 ├── 'config'                                            # 설정 관련 클래스
 │   ├── PasswordConfig.java                             # 비밀번호 설정
@@ -44,19 +45,18 @@
 ├── 'dto'                                               # 데이터 전송 객체 (DTO)
 │   ├── 'request'                                       # 요청 데이터 DTO
 │   │   ├── SignInRequestDto.java                       # 로그인 요청 데이터
-│   │   └── SignUpRequestDto.java                       # 회원가입 요청 데이터
+│   │   ├── SignUpRequestDto.java                       # 회원가입 요청 데이터
+│   │   ├── PasswordCheckRequestDto.java                # 회원탈퇴 요청 데이터
+│   │   └── UpdateUserRequestDto.java                   # 회원수정 요청 데이터
 │   ├── 'response'                                      # 응답 데이터 DTO
 │   │   ├── AuthorDto.java                              # 사용자 권한 정보
 │   │   ├── ErrorResponseDto.java                       # 오류 응답 데이터
 │   │   ├── SignInResponseDto.java                      # 로그인 응답 데이터
-│   │   └── SignUpResponseDto.java                      # 회원가입 응답 데이터
+│   │   ├── SignUpResponseDto.java                      # 회원가입 응답 데이터
+│   │   └── UpdateUserResponseDto.java                  # 회원수정 응답 데이터
 │   └── 'security'                                      # Spring Security 관련 DTO
 │       ├── UserDetailsImpl.java                        # 사용자 인증 정보 구현
 │       └── UserDetailsServiceImpl.java                 # 사용자 인증 서비스 구현
-├── 'dummy'                                             # Mock 데이터 및 테스트 유틸리티
-│   ├── MockUser.java                                   # 사용자 Mock 객체
-│   ├── SecurityMockUser.java                           # Security 관련 Mock 객체
-│   └── WithCustomMockUserSecurityContextFactory.java   # 커스텀 Mock 보안 컨텍스트
 ├── 'entity'                                            # 데이터베이스 엔터티 클래스
 │   ├── Timestamped.java                                # 공통 시간 속성 엔터티
 │   └── User.java                                       # 사용자 엔터티

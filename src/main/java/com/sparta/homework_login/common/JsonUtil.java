@@ -9,6 +9,11 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * Json처리 관련 유틸 클래스
+ *
+ * @since 2025-02-13
+ */
 @Component
 public class JsonUtil {
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -20,7 +25,7 @@ public class JsonUtil {
      * @param res       HTTP 응답 객체 (오류 응답 반환)
      * @param errorCode 응답에 포함될 오류 코드
      * @throws IOException 응답 본문을 작성하는 과정에서 I/O 오류 발생 가능
-     * @since 2025-01-17
+     * @since 2025-02-13
      */
     public void writeBody(HttpServletRequest req, HttpServletResponse res, ErrorCode errorCode) throws IOException {
         String url = req.getRequestURL().toString();
