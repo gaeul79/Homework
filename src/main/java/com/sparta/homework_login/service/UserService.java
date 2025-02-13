@@ -3,13 +3,16 @@ package com.sparta.homework_login.service;
 import com.sparta.homework_login.common.UserValidationCheck;
 import com.sparta.homework_login.dto.request.PasswordCheckRequestDto;
 import com.sparta.homework_login.dto.request.SignUpRequestDto;
+import com.sparta.homework_login.dto.request.UpdateUserRequestDto;
 import com.sparta.homework_login.dto.response.SignUpResponseDto;
+import com.sparta.homework_login.dto.response.UpdateUserResponseDto;
 import com.sparta.homework_login.entity.User;
 import com.sparta.homework_login.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 사용자 관리 서비스 클래스
@@ -48,6 +51,22 @@ public class UserService {
     private User createUser(SignUpRequestDto requestDto) {
         String password = passwordEncoder.encode(requestDto.getPassword());
         return requestDto.convertDtoToEntity(password);
+    }
+
+    /**
+     * 회원수정 API
+     *
+     * @param id 로그인한 유저 ID
+     * @param requestDto 수정할 유저 정보
+     * @since 2025-02-13
+     */
+    @Transactional
+    public UpdateUserResponseDto updateUser(Long id, UpdateUserRequestDto requestDto) {
+        userValidationCheck.comparePassword(id, requestDto.getOriPassword());
+        String newPassword = passwordEncoder.encode(requestDto.getNewPassword());
+        User user = userValidationCheck.findUser(id);
+        user.update(requestDto.getNickname(), newPassword);
+        return UpdateUserResponseDto.create(user);
     }
 
     /**

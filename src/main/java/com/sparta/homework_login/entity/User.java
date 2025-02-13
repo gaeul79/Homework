@@ -35,4 +35,9 @@ public class User extends Timestamped {
 
     @Column
     private String nickname;
+
+    public void update(String nickname, String password) {
+        this.nickname = nickname;
+        this.password = password;
+    }
 }

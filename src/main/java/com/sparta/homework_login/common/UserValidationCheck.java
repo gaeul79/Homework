@@ -16,6 +16,12 @@ public class UserValidationCheck {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
+    public User findUser(Long id) {
+        return userRepository.findById(id).orElseThrow(
+                () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
+        );
+    }
+
     public void duplicationUser(String username) {
         Optional<User> user = userRepository.findByUsername(username);
         if(user.isPresent()) {
@@ -24,10 +30,7 @@ public class UserValidationCheck {
     }
 
     public void comparePassword(Long id, String password) {
-        User user = userRepository.findById(id).orElseThrow(
-                () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
-        );
-
+        User user = findUser(id);
         if(!passwordEncoder.matches(password, user.getPassword())) {
             throw new BusinessException(ErrorCode.USER_PASSWORD_NOT_MATCH);
         }

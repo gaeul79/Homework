@@ -23,7 +23,7 @@ public enum ErrorCode {
     // 401
     TOKEN_TIMEOUT(HttpStatus.UNAUTHORIZED, "만료된 JWT token 입니다."),
     TOKEN_UNSUPPORTED(HttpStatus.UNAUTHORIZED, "지원되지 않는 JWT 토큰 입니다."),
-    USER_PASSWORD_NOT_MATCH(HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다."),
+    USER_PASSWORD_NOT_MATCH(HttpStatus.UNAUTHORIZED, "비밀번호가 올바르지 않습니다."),
 
     // 403
     INVALID_PERMISSION(HttpStatus.FORBIDDEN, "권한이 없습니다"),
